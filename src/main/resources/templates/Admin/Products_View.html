@@ -1,0 +1,74 @@
+<!--Products_View.html-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeLeaf.org"
+      th:replace="base::Layout(~{::SECTION})">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <SECTION>
+        <div class="container-fluid mt-5 p-5">
+
+            <div class="card card-sh">
+                <div class="card-header text-center">
+                    <p class="fs-4">View Products</p>
+                    <th:block th:if="${session.Success}">
+                        <p class="text-success fw-bold">[[${session.Success}]]</p>
+                        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                    </th:block>
+
+                    <th:block th:if="${session.Error}">
+                        <p class="text-danger fw-bold">[[${session.Error}]]</p>
+                        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                    </th:block>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Sr No</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Discount</th>
+                            <th scope="col">Discount Price</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Stock</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p,c:${products}">
+                            <th scope="row">[[${c.count}]]</th>
+                            <td>
+                                <img th:src="@{'/img/Products/' + ${p.image}}" width="50px" height="50px">
+                            </td>
+                            <td>[[${p.title}]]</td>
+                            <td>[[${p.category}]]</td>
+                            <td>[[${p.price}]]</td>
+                            <td>[[${p.Discount}]]</td>
+                            <td>[[${p.discountPrice}]]</td>
+                            <td>[[${p.isActive}]]</td>
+                            <td>[[${p.stock}]]</td>
+                            <td>
+                                <a th:href="@{'/admin/editProduct/'+${p.id}}" class="btn btn-sm btn-primary">
+                                    <i class="fa-regular fa-pen-to-square fa-1x"></i>
+                                    Edit</a>
+                                <a th:href="@{'/admin/deleteProduct/'+${p.id}}" class="btn btn-sm btn-danger">
+                                    <i class="fa-solid fa-trash fa-1x"></i>
+                                    Delete</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="mt-3">
+                <a href="/admin/" class="btn btn-primary col-md-2">Back</a>
+            </div>
+        </div>
+    </SECTION>
+</body>
+</html>
