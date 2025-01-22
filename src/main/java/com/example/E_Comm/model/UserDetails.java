@@ -1,14 +1,13 @@
-//UserDetaile.java
+//UserDetails.java
 package com.example.E_Comm.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,5 +38,20 @@ public class UserDetails {
 
     private String profileImage;
 
-    private String role = "ROLE_USER";
+    private String role;
+
+    @Getter
+    @Column(name = "is_enabled")
+    private Boolean isEnabled;
+
+    @Getter
+    @Column(name = "account_non_locked")
+    private Boolean accountNonLocked;
+
+    @Column(name = "failed_attempt")
+    private Integer failedAttempt;
+
+    private Date lockTime;
+
+
 }

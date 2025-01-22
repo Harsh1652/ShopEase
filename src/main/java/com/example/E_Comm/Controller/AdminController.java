@@ -3,8 +3,10 @@ package com.example.E_Comm.Controller;
 
 import com.example.E_Comm.model.Category;
 import com.example.E_Comm.model.Product;
+import com.example.E_Comm.model.UserDetails;
 import com.example.E_Comm.service.CategoryService;
 import com.example.E_Comm.service.ProductService;
+import com.example.E_Comm.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -33,6 +36,10 @@ public class AdminController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private UserService userService;
+
 
     @GetMapping("/")
     public String index(){
@@ -248,4 +255,54 @@ public class AdminController {
         }
         return "redirect:/admin/editProduct/" + product.getId(); // Stay on the edit page
     }
+
+//--------------------------UserDetails---------------------------------
+    @ModelAttribute
+    public void getUserDetails(Principal p, Model m){
+
+        if (p!=null){
+            String email = p.getName();
+            UserDetails userDetails = userService.getUserByEmail(email);
+            m.addAttribute("user", userDetails);
+        }
+
+        List<Category> allActiveCategory = categoryService.getAllActiveCategory();
+        m.addAttribute("category", allActiveCategory);
+    }
+
+
+    @GetMapping("/users")
+    public String getAllUsers(Model m) {
+        List<UserDetails> users = userService.getUsers("USER");
+
+        if (users == null || users.isEmpty()) {
+            System.out.println("No users found!");
+        } else {
+            System.out.println("Users found: " + users.size());
+            users.forEach(user ->
+                    System.out.println("User Email: " + user.getEmail() + ", Role: " + user.getRole() + ", Enabled: " + user.getIsEnabled())
+            );
+        }
+
+        m.addAttribute("users", users);
+        return "/admin/users";
+    }
+
+
+    @GetMapping("/updateStatus")
+    public String updateUserAccountStatus(@RequestParam boolean status, @RequestParam Integer id,HttpSession session){
+
+        Boolean f = userService.updateAccountStatus(id,status);
+
+        if(f){
+            session.setAttribute("Success","Account Status Updated");
+        }
+        else {
+            session.setAttribute("Error","Something went wrong");
+
+        }
+        return "redirect:/admin/users";
+    }
+
+
 }

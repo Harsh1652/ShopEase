@@ -20,7 +20,7 @@
 
                             <th:block th:if="${param.error}">
                                 <div class="alert alert-danger">
-                                    Invalid email or password. Please try again.
+                                    <p th:text="${session['SPRING_SECURITY_LAST_EXCEPTION']}"></p>
                                 </div>
                             </th:block>
 

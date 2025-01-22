@@ -15,7 +15,7 @@ public class CustomUser implements org.springframework.security.core.userdetails
 
     private UserDetails user;
 
-    public CustomUser(UserDetails user){
+    public CustomUser(UserDetails user) {
         super();
         this.user = user;
     }
@@ -43,7 +43,7 @@ public class CustomUser implements org.springframework.security.core.userdetails
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return user.getAccountNonLocked();
     }
 
     @Override
@@ -53,6 +53,7 @@ public class CustomUser implements org.springframework.security.core.userdetails
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.getIsEnabled();
     }
+
 }

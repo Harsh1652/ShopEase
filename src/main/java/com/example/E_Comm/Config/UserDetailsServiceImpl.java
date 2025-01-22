@@ -1,39 +1,46 @@
-//UserDetailsServiceImpl.java
+//UserDetailsServiceImp
 package com.example.E_Comm.Config;
 
+import com.example.E_Comm.Config.CustomUser;
 import com.example.E_Comm.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+
+
 @Service
-public class UserDetailsServiceImpl implements org.springframework.security.core.userdetails.UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
 
     @Override
-    public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        System.out.println("Attempting login for email: " + username);
-
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         com.example.E_Comm.model.UserDetails user = userRepository.findByEmail(username);
 
         if (user == null) {
-            System.out.println("User not found for email: " + username);
-            throw new UsernameNotFoundException("User not found with email: " + username);
+            throw new UsernameNotFoundException("User not found");
         }
 
-        System.out.println("User found: " + user.getEmail());
+        if (!user.getIsEnabled()) {
+            throw new DisabledException("Your account is disabled. Please contact support.");
+        }
+
+        if (!user.getAccountNonLocked()) {
+            throw new LockedException("Your account is locked. Please wait or contact support.");
+        }
 
         return org.springframework.security.core.userdetails.User
                 .builder()
                 .username(user.getEmail())
-                .password(user.getPassword()) // BCrypt hashed password
-                .roles(user.getRole().replace("ROLE_", "")) // Ensure no prefix in DB
+                .password(user.getPassword())
+                .roles(user.getRole().replace("ROLE_", ""))  // Ensure proper role format
                 .build();
     }
-
-
 }
+

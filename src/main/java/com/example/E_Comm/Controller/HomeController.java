@@ -8,6 +8,7 @@ import com.example.E_Comm.repository.ProductRepository;
 import com.example.E_Comm.service.CategoryService;
 import com.example.E_Comm.service.ProductService;
 import com.example.E_Comm.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,8 +41,15 @@ public class HomeController {
     private UserService userService;
 
     @ModelAttribute
-    public void getUserDetails(Principal){
+    public void getUserDetails(Principal p,Model m){
 
+        if (p!=null){
+           String email = p.getName();
+           UserDetails userDetails = userService.getUserByEmail(email);
+           m.addAttribute("user", userDetails);
+        }
+        List<Category> allActiveCategory = categoryService.getAllActiveCategory();
+        m.addAttribute("category", allActiveCategory);
     }
 
     @GetMapping("/")
@@ -50,9 +58,11 @@ public class HomeController {
     }
 
     @GetMapping("/signin")
-    public String login(){
+    public String login() {
         return "login";
     }
+
+
 
     @GetMapping("/register")
     public String Register(){
@@ -108,6 +118,9 @@ public class HomeController {
 
         return "redirect:/register";
     }
+
+
+
 
 
 
