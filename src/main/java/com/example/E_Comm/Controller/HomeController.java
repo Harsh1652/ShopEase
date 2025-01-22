@@ -1,6 +1,7 @@
 //HomeController.java
 package com.example.E_Comm.Controller;
 
+import com.example.E_Comm.Util.CommonUtil;
 import com.example.E_Comm.model.Category;
 import com.example.E_Comm.model.Product;
 import com.example.E_Comm.model.UserDetails;
@@ -8,6 +9,7 @@ import com.example.E_Comm.repository.ProductRepository;
 import com.example.E_Comm.service.CategoryService;
 import com.example.E_Comm.service.ProductService;
 import com.example.E_Comm.service.UserService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +23,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
+
 
 @Controller
 public class HomeController {
@@ -39,6 +44,9 @@ public class HomeController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CommonUtil commonUtil;
 
     @ModelAttribute
     public void getUserDetails(Principal p,Model m){
@@ -121,7 +129,43 @@ public class HomeController {
 
 
 
+//----------------------Forgot Password----------------------------------
 
+    @GetMapping("/forgot-password")
+    public String showForgotPassword(){
+        return "forgot_password.html";
+    }
+
+
+
+
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(@RequestParam String email, HttpSession session, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
+        UserDetails userByEmail = userService.getUserByEmail(email);
+        if (ObjectUtils.isEmpty(userByEmail)) {
+            session.setAttribute("Error", "Invalid email");
+        } else {
+            String resetToken = UUID.randomUUID().toString();
+            userService.updateUserResetToken(email, resetToken);
+
+            // Generate URL to send in the mail to reset password
+            String url = commonUtil.generateUrl(request) + "/reset-password?token=" + resetToken;
+
+            Boolean sendMail = commonUtil.sendMail(url, email);
+            if (sendMail) {
+                session.setAttribute("Success", "Please check your email. Password reset link has been sent.");
+            } else {
+                session.setAttribute("Error", "Something went wrong! Email not sent.");
+            }
+        }
+
+        return "redirect:/forgot-password";
+    }
+
+    @GetMapping("/reset-password")
+    public String showResetPassword(){
+        return "reset_password.html";
+    }
 
 
 }
