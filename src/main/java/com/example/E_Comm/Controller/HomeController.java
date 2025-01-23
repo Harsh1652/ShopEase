@@ -9,12 +9,14 @@ import com.example.E_Comm.repository.ProductRepository;
 import com.example.E_Comm.service.CategoryService;
 import com.example.E_Comm.service.ProductService;
 import com.example.E_Comm.service.UserService;
+import com.sun.net.httpserver.Authenticator;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -47,6 +49,9 @@ public class HomeController {
 
     @Autowired
     private CommonUtil commonUtil;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @ModelAttribute
     public void getUserDetails(Principal p,Model m){
@@ -163,8 +168,34 @@ public class HomeController {
     }
 
     @GetMapping("/reset-password")
-    public String showResetPassword(){
+    public String showResetPassword(@RequestParam String token, HttpSession session, Model m){
+
+        UserDetails userByToken = userService.getUserByToken(token);
+        if (userByToken == null){
+            m.addAttribute("Message","Your link is invalid or expired");
+            return "Message";
+        }
+        m.addAttribute("token", token);
         return "reset_password.html";
+    }
+
+
+
+    @PostMapping("/reset-password")
+    public String showResetPassword(@RequestParam String token,@RequestParam String password, HttpSession session, Model m){
+
+        UserDetails userByToken = userService.getUserByToken(token);
+        if (userByToken == null){
+            m.addAttribute("Error","Your link is invalid or expired");
+            return "Message";
+        }else {
+            userByToken.setPassword(passwordEncoder.encode(password));
+            userByToken.setResetToken(null);
+            userService.updateUser(userByToken);
+            session.setAttribute("Success", "Password changed successfully");
+            m.addAttribute("Message","Password changed successfully");
+            return "Message";
+        }
     }
 
 
