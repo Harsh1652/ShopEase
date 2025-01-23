@@ -1,10 +1,13 @@
 //UserController
 package com.example.E_Comm.Controller;
 
+import com.example.E_Comm.model.Cart;
 import com.example.E_Comm.model.Category;
 import com.example.E_Comm.model.UserDetails;
+import com.example.E_Comm.service.CartService;
 import com.example.E_Comm.service.CategoryService;
 import com.example.E_Comm.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -21,10 +24,15 @@ import java.util.List;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private CartService cartService;
 
 
     @Autowired
@@ -53,6 +61,24 @@ public class UserController {
         String email = p.getName();
         UserDetails userDetails = userService.getUserByEmail(email);
         return userDetails;
+    }
+
+
+//----------------------Add to Cart-----------------------------------------------------
+
+    @GetMapping("/addCart")
+    public String addToCart(@RequestParam Integer pid, @RequestParam Integer uid, HttpSession session){
+
+        Cart saveCart = cartService.saveCart(pid,uid);
+
+        if (ObjectUtils.isEmpty(saveCart)){
+            session.setAttribute("Error", "Failed!!");
+        }else {
+            session.setAttribute("Success", "Product added to cart");
+
+        }
+
+        return "redirect:/viewProducts/"+pid;
     }
 
 

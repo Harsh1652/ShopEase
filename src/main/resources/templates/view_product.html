@@ -1,12 +1,45 @@
+<!--view_product.html-->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeLeaf.org" th:replace="base::Layout(~{::SECTION})">
 <head>
   <meta charset="UTF-8">
   <title>Product Details</title>
+  <!-- Include Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <SECTION>
   <div class="container" style="margin-top: 70px; margin-bottom: 240px;">
+
+    <!-- Toasts for Success and Error Messages -->
+    <div aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 11; margin-top: 70px;">
+      <!-- Success Toast -->
+      <th:block th:if="${session.Success}">
+        <div class="toast align-items-center text-bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="d-flex">
+            <div class="toast-body">
+              [[${session.Success}]]
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        </div>
+      </th:block>
+
+      <!-- Error Toast -->
+      <th:block th:if="${session.Error}">
+        <div class="toast align-items-center text-bg-danger border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="d-flex">
+            <div class="toast-body">
+              [[${session.Error}]]
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        </div>
+      </th:block>
+    </div>
+
+
+    <!-- Product Details Section -->
     <div class="row justify-content-center">
       <div class="col-md-10">
         <div class="card shadow-lg p-4">
@@ -14,8 +47,9 @@
             <!-- Product Image -->
             <div class="col-md-6 text-center">
               <img alt="" th:src="@{'/img/Products/'+${product.image}}"
-              class="img-fluid rounded" style="max-height: 400px;">
+                   class="img-fluid rounded" style="max-height: 400px;">
             </div>
+
             <!-- Product Details -->
             <div class="col-md-6">
               <h3 class="fw-bold">[[${product.title}]]</h3><br>
@@ -26,21 +60,22 @@
                 <span class="fw-bold">Product Details: </span> <br>
                 Status:
                 <th:block th:if="${product.stock > 0}">
-                <span class="badge bg-success">Available</span>
+                  <span class="badge bg-success">Available</span>
                 </th:block>
                 <th:block th:unless="${product.stock > 0}">
                   <span class="badge bg-warning">Out of Stock</span><br>
                 </th:block>
                 <br>
                 Category: [[${product.category}]]
-                 <br>
+                <br>
                 Policy: 7 Days Replacement & Return
               </p>
               <p class="fs-4 fw-bold text-dark">
-                Price:   <i class="fas fa-rupee-sign"></i> [[${product.discountPrice}]]
+                Price: <i class="fas fa-rupee-sign"></i> [[${product.discountPrice}]]
                 <span class="fs-5 text-decoration-line-through text-secondary"><i class="fas fa-rupee-sign"></i> [[${product.price}]]</span>
                 <span class="fs-6 text-success">[[${product.discount}]]% off</span>
               </p>
+
               <!-- Icons -->
               <div class="row mt-3">
                 <div class="col-md-4 text-center text-success">
@@ -56,16 +91,20 @@
                   <p>Free Shipping</p>
                 </div>
               </div>
+
               <!-- Add to Cart Button -->
-
-
               <th:block th:if="${product.stock > 0}">
-                <a href="#" class="btn btn-danger btn-lg btn-block col-md-12 fw-bold">Add To Cart</a>
+                <th:block th:if="${user==null}">
+                  <a href="/signin" class="btn btn-danger btn-lg btn-block col-md-12 fw-bold">Add To Cart</a>
+                </th:block>
+                <th:block th:unless="${user==null}">
+                  <a th:href="@{'/user/addCart?pid='+${product.id}+'&uid='+${user.id}}"
+                     class="btn btn-danger btn-lg btn-block col-md-12 fw-bold">Add To Cart</a>
+                </th:block>
               </th:block>
               <th:block th:unless="${product.stock > 0}">
                 <a href="#" class="btn btn-warning btn-lg btn-block col-md-12 fw-bold">Out Of Stock</a>
               </th:block>
-
             </div>
           </div>
         </div>
@@ -73,5 +112,8 @@
     </div>
   </div>
 </SECTION>
+
+<!-- Include Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

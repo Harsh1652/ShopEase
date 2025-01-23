@@ -53,6 +53,8 @@ public class HomeController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+
+
     @ModelAttribute
     public void getUserDetails(Principal p,Model m){
 
@@ -61,6 +63,7 @@ public class HomeController {
            UserDetails userDetails = userService.getUserByEmail(email);
            m.addAttribute("user", userDetails);
         }
+
         List<Category> allActiveCategory = categoryService.getAllActiveCategory();
         m.addAttribute("category", allActiveCategory);
     }
