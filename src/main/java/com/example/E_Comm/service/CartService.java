@@ -1,3 +1,4 @@
+//CartService.java
 package com.example.E_Comm.service;
 
 import com.example.E_Comm.model.Cart;
@@ -10,4 +11,7 @@ public interface CartService {
 
     public List<Cart> getCartByUser(Integer userId);
 
+    public Integer getCountCart(Integer userId);
+
+    public void updateQuantity(String sy, Integer cid);
 }

@@ -6,6 +6,7 @@ import com.example.E_Comm.model.Category;
 import com.example.E_Comm.model.Product;
 import com.example.E_Comm.model.UserDetails;
 import com.example.E_Comm.repository.ProductRepository;
+import com.example.E_Comm.service.CartService;
 import com.example.E_Comm.service.CategoryService;
 import com.example.E_Comm.service.ProductService;
 import com.example.E_Comm.service.UserService;
@@ -53,6 +54,9 @@ public class HomeController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private CartService cartService;
+
 
 
     @ModelAttribute
@@ -62,6 +66,8 @@ public class HomeController {
            String email = p.getName();
            UserDetails userDetails = userService.getUserByEmail(email);
            m.addAttribute("user", userDetails);
+           Integer countCart = cartService.getCountCart(userDetails.getId());
+           m.addAttribute("countCart", countCart);
         }
 
         List<Category> allActiveCategory = categoryService.getAllActiveCategory();

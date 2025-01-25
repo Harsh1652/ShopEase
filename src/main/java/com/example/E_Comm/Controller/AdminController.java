@@ -4,6 +4,7 @@ package com.example.E_Comm.Controller;
 import com.example.E_Comm.model.Category;
 import com.example.E_Comm.model.Product;
 import com.example.E_Comm.model.UserDetails;
+import com.example.E_Comm.service.CartService;
 import com.example.E_Comm.service.CategoryService;
 import com.example.E_Comm.service.ProductService;
 import com.example.E_Comm.service.UserService;
@@ -39,6 +40,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CartService cartService;
 
 
     @GetMapping("/")

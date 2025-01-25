@@ -1,3 +1,4 @@
+//Cart.java
 package com.example.E_Comm.model;
 
 import jakarta.persistence.*;
@@ -27,4 +28,21 @@ public class Cart {
 
     @Transient
     private Double totalprice;
+
+    @Transient
+    private Double totalOrderPrice;
+
+    public Double getTotalprice() {
+        if (product != null && quantity != null) {
+            return product.getDiscountPrice() * quantity;
+        }
+        return 0.0;
+    }
+
+    // Getter for totalOrderPrice
+    public Double getTotalOrderPrice() {
+        return totalOrderPrice != null ? totalOrderPrice : 0.0;
+    }
+
+
 }
