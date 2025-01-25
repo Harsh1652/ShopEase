@@ -3,9 +3,11 @@ package com.example.E_Comm.Controller;
 
 import com.example.E_Comm.model.Cart;
 import com.example.E_Comm.model.Category;
+import com.example.E_Comm.model.OrderRequest;
 import com.example.E_Comm.model.UserDetails;
 import com.example.E_Comm.service.CartService;
 import com.example.E_Comm.service.CategoryService;
+import com.example.E_Comm.service.OrderService;
 import com.example.E_Comm.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.logging.SocketHandler;
 
 @Controller
 @RequestMapping("/user")
@@ -37,6 +37,9 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private OrderService orderService;
 
 
     @GetMapping("/home")
@@ -113,6 +116,16 @@ public class UserController {
     public String orderPage(){
 
         return "/user/order";
+    }
+
+    @PostMapping("/save-order")
+    public String saveOrder(@ModelAttribute OrderRequest request,Principal p){
+
+        //System.out.println(request);
+        UserDetails user = getLoggedInUserDetails(p);
+        orderService.saveOrder(user.getId(),request);
+
+        return "/user/success";
     }
 
 

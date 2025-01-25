@@ -1,5 +1,5 @@
 //categoryService_impl.java
-package com.example.E_Comm.service.categoryServiceImpl;
+package com.example.E_Comm.service.ServiceImpl;
 
 import com.example.E_Comm.model.Category;
 import com.example.E_Comm.repository.CategoryRepository;

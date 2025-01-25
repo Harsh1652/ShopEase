@@ -1,9 +1,10 @@
 //UserServiceImpl.java
-package com.example.E_Comm.service;
+package com.example.E_Comm.service.ServiceImpl;
 
 import com.example.E_Comm.Util.AppConstant;
 import com.example.E_Comm.model.UserDetails;
 import com.example.E_Comm.repository.UserRepository;
+import com.example.E_Comm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;

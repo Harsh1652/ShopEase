@@ -1,12 +1,9 @@
 //CommonServiceImpl.java
-package com.example.E_Comm.service;
+package com.example.E_Comm.service.ServiceImpl;
 
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.http.HttpServlet;
+import com.example.E_Comm.service.CommonService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

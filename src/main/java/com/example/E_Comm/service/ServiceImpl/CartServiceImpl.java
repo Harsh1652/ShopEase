@@ -1,5 +1,5 @@
 //CartServiceImp.java
-package com.example.E_Comm.service;
+package com.example.E_Comm.service.ServiceImpl;
 
 import com.example.E_Comm.model.Cart;
 import com.example.E_Comm.model.Product;
@@ -7,8 +7,8 @@ import com.example.E_Comm.model.UserDetails;
 import com.example.E_Comm.repository.CartRepository;
 import com.example.E_Comm.repository.ProductRepository;
 import com.example.E_Comm.repository.UserRepository;
+import com.example.E_Comm.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.ParameterResolutionDelegate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CartServiceImpl implements CartService{
+public class CartServiceImpl implements CartService {
 
     @Autowired
     private CartRepository cartRepository;

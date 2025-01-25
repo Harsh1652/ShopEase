@@ -1,9 +1,11 @@
 //ProductServiceImpl.java
-package com.example.E_Comm.service;
+package com.example.E_Comm.service.ServiceImpl;
 
 import com.example.E_Comm.model.Category;
 import com.example.E_Comm.model.Product;
 import com.example.E_Comm.repository.ProductRepository;
+import com.example.E_Comm.service.CategoryService;
+import com.example.E_Comm.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;

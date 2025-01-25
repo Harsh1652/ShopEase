@@ -1,3 +1,4 @@
+//ProductOrder.java
 package com.example.E_Comm.model;
 
 import jakarta.persistence.*;
@@ -5,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
 
 import java.util.Date;
 
@@ -36,5 +38,8 @@ public class ProductOrder {
     private String status;
 
     private String paymentType;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private OrderAddress orderAddress;
 
 }
