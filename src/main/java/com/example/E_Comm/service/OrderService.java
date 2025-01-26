@@ -14,4 +14,10 @@ public interface OrderService {
 
     public Boolean updateOrderStatus(Integer id, String status);
 
+    // public List<ProductOrder> getAllOrders();
+
+    public List<ProductOrder> getAllOrdersSortedByDate();
+
+
+
 }

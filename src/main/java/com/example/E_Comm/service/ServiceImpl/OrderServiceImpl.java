@@ -79,4 +79,19 @@ public class OrderServiceImpl implements OrderService {
         return false;
     }
 
+
+    // For Admin View
+//    @Override
+//    public List<ProductOrder> getAllOrders() {
+//
+//        return orderRepository.findAll();
+//    }
+
+
+    @Override
+    public List<ProductOrder> getAllOrdersSortedByDate() {
+        return orderRepository.findAllOrdersSortedByDate();
+    }
+
+
 }

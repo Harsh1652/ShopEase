@@ -54,18 +54,19 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/register">REGISTER</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/">ADMIN</a>
-                    </li>
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link" href="/admin/">ADMIN</a>-->
+<!--                    </li>-->
                 </th:block>
 
 
                 <th:block th:if="${user!=null}">
-
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/user/cart">
-                            <i class="fa-solid fa-cart-shopping"></i> Cart [ [[${countCart}]] ]</a>
-                    </li>
+                    <th:block th:if="${user.role=='ROLE_USER'}">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/user/cart">
+                                <i class="fa-solid fa-cart-shopping"></i> Cart [ [[${countCart}]] ]</a>
+                        </li>
+                    </th:block>
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

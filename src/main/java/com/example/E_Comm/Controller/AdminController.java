@@ -1,13 +1,12 @@
 //AdminController
 package com.example.E_Comm.Controller;
 
+import com.example.E_Comm.Util.OrderStatus;
 import com.example.E_Comm.model.Category;
 import com.example.E_Comm.model.Product;
+import com.example.E_Comm.model.ProductOrder;
 import com.example.E_Comm.model.UserDetails;
-import com.example.E_Comm.service.CartService;
-import com.example.E_Comm.service.CategoryService;
-import com.example.E_Comm.service.ProductService;
-import com.example.E_Comm.service.UserService;
+import com.example.E_Comm.service.*;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +43,9 @@ public class AdminController {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    private OrderService orderService;
+
 
     @GetMapping("/")
     public String index(){
@@ -51,7 +53,7 @@ public class AdminController {
     }
 
 
-//-----------------------ADD CATEGORY------------------------
+//-----------------------CATEGORY------------------------
 
     @GetMapping("/Category")
     public String Category(Model m) {
@@ -157,7 +159,7 @@ public class AdminController {
 
 
 
-//---------------ADD PRODUCTS------------------------------------
+//---------------PRODUCTS------------------------------------
 
     @GetMapping("/addProduct")
     public String addProduct(Model m){
@@ -260,6 +262,7 @@ public class AdminController {
         return "redirect:/admin/editProduct/" + product.getId(); // Stay on the edit page
     }
 
+
 //--------------------------UserDetails---------------------------------
     @ModelAttribute
     public void getUserDetails(Principal p, Model m){
@@ -307,6 +310,47 @@ public class AdminController {
         }
         return "redirect:/admin/users";
     }
+
+
+//-----------------------------Orders------------------------------
+
+    @GetMapping("/orders")
+     public String getAllOrders(Model m){
+
+        //List<ProductOrder> allOrders = orderService.getAllOrders();
+        List<ProductOrder> allOrders = orderService.getAllOrdersSortedByDate();
+
+        m.addAttribute("orders",allOrders);
+
+        return "/admin/orders";
+    }
+
+
+
+    @PostMapping("/update-order-status")
+    public String updateOrderStatus(@RequestParam Integer id, @RequestParam Integer st, HttpSession session){
+
+        OrderStatus[] values = OrderStatus.values();
+        String status = null;
+        for (OrderStatus orderSt:values){
+            if (orderSt.getId().equals(st)) {
+                status = orderSt.getName();
+                break;
+            }
+
+        }
+        Boolean updateOrder = orderService.updateOrderStatus(id,status);
+        if (updateOrder){
+            session.setAttribute("Success", "Order Updated Successfully");
+        } else {
+            session.setAttribute("Error", "Something went wrong!");
+        }
+
+        System.out.println("Values:"+values);
+
+        return "redirect:/admin/orders";
+    }
+
 
 
 }

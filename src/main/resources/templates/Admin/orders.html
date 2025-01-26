@@ -1,0 +1,110 @@
+<!--orders.html-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeLeaf.org"
+      th:replace="base::Layout(~{::SECTION})">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<SECTION>
+
+  <div class="container-fluid mt-5 p-2">
+    <div class="row">
+      <p class="text-center fs-3">All Orders</p>
+      <hr>
+      <th:block th:if="${session.Success}">
+        <p class="text-success fw-bold text-center">[[${session.Success}]]</p>
+        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+      </th:block>
+
+      <th:block th:if="${session.Error}">
+        <p class="text-danger fw-bold text-center">[[${session.Error}]]</p>
+        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+      </th:block>
+
+      <div class="col-md-5 p-4">
+          <form>
+            <div class="row">
+              <div class="col">
+              <input type="text" class="form-control" name="" placeholder="Enter order id">
+              </div>
+              <div class="col">
+                <button class="btn btn-primary">Search</button>
+              </div>
+            </div>
+          </form>
+      </div>
+
+      <div class="col-md-12 ps-4 pe-4">
+        <table class="table table-bordered card-sh">
+          <thead>
+            <tr>
+              <th scope="col">Order Id</th>
+              <th scope="col">Delivery Details</th>
+              <th scope="col">Date</th>
+              <th scope="col">Product Details</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Price</th>
+              <th scope="col">Status</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="o:${orders}">
+              <th scope="row">[[${o.orderId}]]</th>
+              <td>
+                Name: [[${o.OrderAddress.firstName+' '+o.OrderAddress.lastName}]] <br>
+                Email: [[${o.OrderAddress.email}]]<br>
+                Mobile No: [[${o.OrderAddress.mobileNo}]]<br>
+                Address: [[${o.OrderAddress.address}]]<br>
+                City: [[${o.OrderAddress.city}]]<br>
+                State: [[${o.OrderAddress.state}]]<br>
+                Pincode: [[${o.OrderAddress.pincode}]]<br>
+              </td>
+              <td>[[${o.orderDate}]]</td>
+              <td>[[${o.product.title}]]</td>
+              <td>[[${o.quantity}]]</td>
+              <td>[[${o.quantity * o.price}]] </td>
+              <td>[[${o.status}]]</td>
+              <td>
+                <form action="/admin/update-order-status" method="post">
+                  <div class="row">
+                    <div class="col">
+                      <select class="form-control" name="st">
+                        <option>---Select---</option>
+                        <option value="1">In Progress</option>
+                        <option value="2">Order Received</option>
+                        <option value="3">Product Packed</option>
+                        <option value="4">Out for Delivery</option>
+                        <option value="5">Order Delivered</option>
+                        <option value="6">Cancelled</option>
+                      </select>
+                    </div>
+                    <input th:value="${o.id}" name="id" type="hidden">
+                    <div class="col">
+
+                      <th:block th:if="${o.status=='Cancelled' || o.status=='Order Delivered'}">
+                        <button  class="btn  btn-sm btn-primary disabled">Update</button>
+                      </th:block>
+
+                      <th:block th:unless="${o.status=='Cancelled' || o.status=='Order Delivered'}">
+                        <button class="btn  btn-sm btn-primary">Update</button>
+                      </th:block>
+
+                    </div>
+                  </div>
+                </form>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <a href="/admin/" class="btn  btn-primary">
+          <i class="fa-regular fa-circle-left"></i> Back</a>
+      </div>
+    </div>
+  </div>
+</SECTION>
+</body>
+</html>
