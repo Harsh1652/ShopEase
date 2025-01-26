@@ -7,7 +7,9 @@ public enum OrderStatus {
     ORDER_RECEIVED(2,"Order Received"),
     PRODUCT_PACKED(3,"Product Packed"),
     OUT_FOR_DELIVERY(4,"Out for Delivery"),
-    DELIVERED(5,"Order Delivered");
+    DELIVERED(5,"Order Delivered"),
+    CANCEL(6,"Cancelled");
+
 
     private Integer id;
 

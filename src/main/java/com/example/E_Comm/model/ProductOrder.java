@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -23,7 +23,7 @@ public class ProductOrder {
 
     private String orderId;
 
-    private Date orderDate;
+    private LocalDate orderDate;
 
     @ManyToOne
     private Product product;

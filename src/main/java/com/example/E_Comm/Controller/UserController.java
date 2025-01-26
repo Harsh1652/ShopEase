@@ -1,10 +1,8 @@
 //UserController
 package com.example.E_Comm.Controller;
 
-import com.example.E_Comm.model.Cart;
-import com.example.E_Comm.model.Category;
-import com.example.E_Comm.model.OrderRequest;
-import com.example.E_Comm.model.UserDetails;
+import com.example.E_Comm.Util.OrderStatus;
+import com.example.E_Comm.model.*;
 import com.example.E_Comm.service.CartService;
 import com.example.E_Comm.service.CategoryService;
 import com.example.E_Comm.service.OrderService;
@@ -18,6 +16,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.security.PublicKey;
 import java.util.List;
 import java.util.logging.SocketHandler;
 
@@ -113,7 +112,17 @@ public class UserController {
 
 
     @GetMapping("/orders")
-    public String orderPage(){
+    public String orderPage(Principal p, Model m){
+
+        UserDetails user = getLoggedInUserDetails(p);
+        List<Cart> carts = cartService.getCartByUser(user.getId());
+        m.addAttribute("carts", carts);
+        if (carts.size()>0) {
+            double orderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
+            double totalOrderPrice = carts.get(carts.size() - 1).getTotalOrderPrice() + 250 + 100;
+            m.addAttribute("orderPrice", orderPrice);
+            m.addAttribute("totalOrderPrice", totalOrderPrice);
+        }
 
         return "/user/order";
     }
@@ -125,9 +134,51 @@ public class UserController {
         UserDetails user = getLoggedInUserDetails(p);
         orderService.saveOrder(user.getId(),request);
 
+        return "redirect:/user/success";
+    }
+
+    @GetMapping("/success")
+    public String loadSuccess(){
+
         return "/user/success";
     }
 
+
+
+    @GetMapping("/user-orders")
+    public String myOrder(Model m, Principal p){
+
+        UserDetails loginUser = getLoggedInUserDetails(p);
+        List<ProductOrder> orders = orderService.getOrdersByUser(loginUser.getId());
+        m.addAttribute("orders",orders);
+
+        return "/user/my_orders";
+    }
+
+
+    @GetMapping("/update-status")
+    public String updateOrderStatus(@RequestParam Integer id, @RequestParam Integer st, HttpSession session){
+
+        OrderStatus[] values = OrderStatus.values();
+        String status = null;
+        for (OrderStatus orderSt:values){
+            if (orderSt.getId().equals(st)) {
+                status = orderSt.getName();
+                break;
+            }
+
+        }
+        Boolean updateOrder = orderService.updateOrderStatus(id,status);
+        if (updateOrder){
+            session.setAttribute("Success", "Order Cancelled Successfully");
+        } else {
+            session.setAttribute("Error", "Something went wrong!");
+        }
+
+        System.out.println("Values:"+values);
+
+        return "redirect:/user/user-orders";
+    }
 
 
 }
