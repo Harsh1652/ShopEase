@@ -175,7 +175,7 @@ public class UserController {
         ProductOrder updateOrder = orderService.updateOrderStatus(id,status);
         commonUtil.sendMailForProductOrder(updateOrder, status);
 
-        if (ObjectUtils.isEmpty(updateOrder)){
+        if (!ObjectUtils.isEmpty(updateOrder)) {
             session.setAttribute("Success", "Order Cancelled Successfully");
         } else {
             session.setAttribute("Error", "Something went wrong!");
