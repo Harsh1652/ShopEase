@@ -1,6 +1,7 @@
 //AdminController
 package com.example.E_Comm.Controller;
 
+import com.example.E_Comm.Util.CommonUtil;
 import com.example.E_Comm.Util.OrderStatus;
 import com.example.E_Comm.model.Category;
 import com.example.E_Comm.model.Product;
@@ -45,6 +46,9 @@ public class AdminController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private CommonUtil commonUtil;
 
 
     @GetMapping("/")
@@ -328,28 +332,31 @@ public class AdminController {
 
 
     @PostMapping("/update-order-status")
-    public String updateOrderStatus(@RequestParam Integer id, @RequestParam Integer st, HttpSession session){
+    public String updateOrderStatus(@RequestParam Integer id, @RequestParam Integer st, HttpSession session) throws Exception {
 
         OrderStatus[] values = OrderStatus.values();
         String status = null;
-        for (OrderStatus orderSt:values){
+        for (OrderStatus orderSt : values) {
             if (orderSt.getId().equals(st)) {
                 status = orderSt.getName();
                 break;
             }
-
         }
-        Boolean updateOrder = orderService.updateOrderStatus(id,status);
-        if (updateOrder){
+
+        ProductOrder updateOrder = orderService.updateOrderStatus(id, status);
+        commonUtil.sendMailForProductOrder(updateOrder, status);
+
+        if (!ObjectUtils.isEmpty(updateOrder)) {
             session.setAttribute("Success", "Order Updated Successfully");
         } else {
             session.setAttribute("Error", "Something went wrong!");
         }
 
-        System.out.println("Values:"+values);
+        System.out.println("Values:" + values);
 
         return "redirect:/admin/orders";
     }
+
 
 
 

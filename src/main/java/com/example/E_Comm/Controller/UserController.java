@@ -1,6 +1,7 @@
 //UserController
 package com.example.E_Comm.Controller;
 
+import com.example.E_Comm.Util.CommonUtil;
 import com.example.E_Comm.Util.OrderStatus;
 import com.example.E_Comm.model.*;
 import com.example.E_Comm.service.CartService;
@@ -39,6 +40,9 @@ public class UserController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private CommonUtil commonUtil;
 
 
     @GetMapping("/home")
@@ -128,7 +132,7 @@ public class UserController {
     }
 
     @PostMapping("/save-order")
-    public String saveOrder(@ModelAttribute OrderRequest request,Principal p){
+    public String saveOrder(@ModelAttribute OrderRequest request,Principal p) throws Exception {
 
         //System.out.println(request);
         UserDetails user = getLoggedInUserDetails(p);
@@ -157,7 +161,7 @@ public class UserController {
 
 
     @GetMapping("/update-status")
-    public String updateOrderStatus(@RequestParam Integer id, @RequestParam Integer st, HttpSession session){
+    public String updateOrderStatus(@RequestParam Integer id, @RequestParam Integer st, HttpSession session) throws Exception {
 
         OrderStatus[] values = OrderStatus.values();
         String status = null;
@@ -168,8 +172,10 @@ public class UserController {
             }
 
         }
-        Boolean updateOrder = orderService.updateOrderStatus(id,status);
-        if (updateOrder){
+        ProductOrder updateOrder = orderService.updateOrderStatus(id,status);
+        commonUtil.sendMailForProductOrder(updateOrder, status);
+
+        if (ObjectUtils.isEmpty(updateOrder)){
             session.setAttribute("Success", "Order Cancelled Successfully");
         } else {
             session.setAttribute("Error", "Something went wrong!");
