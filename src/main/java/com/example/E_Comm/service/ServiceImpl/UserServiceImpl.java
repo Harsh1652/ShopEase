@@ -6,10 +6,19 @@ import com.example.E_Comm.model.UserDetails;
 import com.example.E_Comm.repository.UserRepository;
 import com.example.E_Comm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -119,7 +128,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails getUserByToken(String token) {
 
-         return userRepository.findByResetToken(token);
+        return userRepository.findByResetToken(token);
     }
 
 
@@ -127,4 +136,43 @@ public class UserServiceImpl implements UserService {
     public UserDetails updateUser(UserDetails user) {
         return userRepository.save(user);
     }
+
+    @Override
+    public UserDetails updateUserProfile(UserDetails user, MultipartFile image) throws IOException {
+
+        UserDetails dbUser = userRepository.findById(user.getId()).orElse(null);
+
+        if (dbUser != null) {
+            dbUser.setName(user.getName());
+            dbUser.setMobileNumber(user.getMobileNumber());
+            dbUser.setAddress(user.getAddress());
+            dbUser.setCity(user.getCity());
+            dbUser.setState(user.getState());
+            dbUser.setPincode(user.getPincode());
+
+            // Check if the user uploaded a new image
+            if (image != null && !image.isEmpty()) {
+                String imageName = image.getOriginalFilename();
+                dbUser.setProfileImage(imageName);
+
+                // Ensure directory exists
+                File saveDir = new ClassPathResource("static/img/Profile").getFile();
+                if (!saveDir.exists()) {
+                    saveDir.mkdirs();
+                }
+
+                // Save the image file
+                Path path = Paths.get(saveDir.getAbsolutePath(), imageName);
+                Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+                System.out.println("Image uploaded: " + image.getOriginalFilename());
+                System.out.println("Saved at: " + path.toString());
+            }
+
+            dbUser = userRepository.save(dbUser);
+        }
+
+        return dbUser;
+    }
+
 }

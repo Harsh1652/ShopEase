@@ -2,7 +2,9 @@
 package com.example.E_Comm.service;
 
 import com.example.E_Comm.model.UserDetails;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
@@ -30,4 +32,7 @@ public interface UserService {
     public UserDetails getUserByToken(String token);
 
     public UserDetails updateUser(UserDetails user);
+
+    public UserDetails updateUserProfile(UserDetails user, MultipartFile img) throws IOException;
+
 }

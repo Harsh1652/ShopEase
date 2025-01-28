@@ -15,7 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.security.PublicKey;
 import java.util.List;
@@ -72,7 +74,7 @@ public class UserController {
     }
 
 
-//----------------------Add to Cart-----------------------------------------------------
+//----------------------Add to Cart & Orders-----------------------------------------------------
 
     @GetMapping("/addCart")
     public String addToCart(@RequestParam Integer pid, @RequestParam Integer uid, HttpSession session){
@@ -184,6 +186,30 @@ public class UserController {
         System.out.println("Values:"+values);
 
         return "redirect:/user/user-orders";
+    }
+
+
+//----------------------Profile--------------------------------------
+
+    @GetMapping("/profile")
+    public String profile(){
+
+        return "/user/profile";
+    }
+
+    @PostMapping("/update-profile")
+    public String updateProfile(@ModelAttribute UserDetails user,
+                                @RequestParam(value = "image", required = false) MultipartFile image,
+                                HttpSession session) throws IOException {
+
+        UserDetails updateUserProfile = userService.updateUserProfile(user, image);
+        if (ObjectUtils.isEmpty(updateUserProfile)){
+            session.setAttribute("Error", "Profile not updated");
+        } else {
+            session.setAttribute("Success", "Profile updated");
+        }
+
+        return "redirect:/user/profile";
     }
 
 
