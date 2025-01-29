@@ -118,4 +118,10 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public List<Product> searchProduct(String ch) {
+        return productRepository.searchProduct(ch);
+    }
+
+
 }

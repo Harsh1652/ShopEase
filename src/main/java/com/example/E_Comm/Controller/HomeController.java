@@ -176,6 +176,8 @@ public class HomeController {
         return "redirect:/forgot-password";
     }
 
+//-------------------------------ResetPassword----------------------------------------------
+
     @GetMapping("/reset-password")
     public String showResetPassword(@RequestParam String token, HttpSession session, Model m){
 
@@ -207,5 +209,20 @@ public class HomeController {
         }
     }
 
+
+//-------------------------------Search---------------------------------
+
+    @GetMapping("/search")
+     public String searchProduct(@RequestParam String ch, Model m){
+
+        List<Product> searchProduct = productService.searchProduct(ch);
+        m.addAttribute("products",searchProduct);
+
+        List<Category> categories = categoryService.getAllCategory();
+        m.addAttribute("categories", categories);
+
+
+        return "product";
+     }
 
 }

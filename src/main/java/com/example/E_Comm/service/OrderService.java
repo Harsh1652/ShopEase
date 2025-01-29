@@ -18,6 +18,6 @@ public interface OrderService {
 
     public List<ProductOrder> getAllOrdersSortedByDate();
 
-
+    public ProductOrder getOrderByOrderId(String orderId);
 
 }

@@ -21,6 +21,6 @@ public interface ProductService {
 
     public List<Product> getAllActiveProduct(String category);
 
-
+    public List<Product> searchProduct(String ch);
 
 }

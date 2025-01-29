@@ -24,10 +24,15 @@
       </th:block>
 
       <div class="col-md-5 p-4">
-          <form>
+          <form action="/admin/search-order" method="get">
+            <a href="/admin/" class="btn  btn-primary">
+              <i class="fa-regular fa-circle-let"></i> Back</a>
+            <br>
+            <br>
+
             <div class="row">
               <div class="col">
-              <input type="text" class="form-control" name="" placeholder="Enter order id">
+              <input type="text" class="form-control" name="orderId" placeholder="Enter order id">
               </div>
               <div class="col">
                 <button class="btn btn-primary">Search</button>
@@ -51,57 +56,117 @@
             </tr>
           </thead>
           <tbody>
-            <tr th:each="o:${orders}">
-              <th scope="row">[[${o.orderId}]]</th>
-              <td>
-                Name: [[${o.OrderAddress.firstName+' '+o.OrderAddress.lastName}]] <br>
-                Email: [[${o.OrderAddress.email}]]<br>
-                Mobile No: [[${o.OrderAddress.mobileNo}]]<br>
-                Address: [[${o.OrderAddress.address}]]<br>
-                City: [[${o.OrderAddress.city}]]<br>
-                State: [[${o.OrderAddress.state}]]<br>
-                Pincode: [[${o.OrderAddress.pincode}]]<br>
-              </td>
-              <td>[[${o.orderDate}]]</td>
-              <td>[[${o.product.title}]]</td>
-              <td>[[${o.quantity}]]</td>
-              <td>[[${o.quantity * o.price}]] </td>
-              <td>[[${o.status}]]</td>
-              <td>
-                <form action="/admin/update-order-status" method="post">
-                  <div class="row">
-                    <div class="col">
-                      <select class="form-control" name="st">
-                        <option>---Select---</option>
-                        <option value="1">In Progress</option>
-                        <option value="2">Order Received</option>
-                        <option value="3">Product Packed</option>
-                        <option value="4">Out for Delivery</option>
-                        <option value="5">Order Delivered</option>
-                        <option value="6">Cancelled</option>
-                      </select>
+
+            <th:block th:if="${search}">
+              <th:block th:if="${orderDetails!=null}">
+                <tr>
+                  <th scope="row">[[${orderDetails.orderId}]]</th>
+                  <td>
+                    Name: [[${orderDetails.OrderAddress.firstName+' '+orderDetails.OrderAddress.lastName}]] <br>
+                    Email: [[${orderDetails.OrderAddress.email}]]<br>
+                    Mobile No: [[${orderDetails.OrderAddress.mobileNo}]]<br>
+                    Address: [[${orderDetails.OrderAddress.address}]]<br>
+                    City: [[${orderDetails.OrderAddress.city}]]<br>
+                    State: [[${orderDetails.OrderAddress.state}]]<br>
+                    Pincode: [[${orderDetails.OrderAddress.pincode}]]<br>
+                  </td>
+                  <td>[[${orderDetails.orderDate}]]</td>
+                  <td>[[${orderDetails.product.title}]]</td>
+                  <td>[[${orderDetails.quantity}]]</td>
+                  <td>[[${orderDetails.quantity * orderDetails.price}]] </td>
+                  <td>[[${orderDetails.status}]]</td>
+                  <td>
+                    <form action="/admin/update-order-status" method="post">
+                      <div class="row">
+                        <div class="col">
+                          <select class="form-control" name="st">
+                            <option>---Select---</option>
+                            <option value="1">In Progress</option>
+                            <option value="2">Order Received</option>
+                            <option value="3">Product Packed</option>
+                            <option value="4">Out for Delivery</option>
+                            <option value="5">Order Delivered</option>
+                            <option value="6">Cancelled</option>
+                          </select>
+                        </div>
+                        <input th:value="${orderDetails.id}" name="id" type="hidden">
+                        <div class="col">
+
+                          <th:block th:if="${orderDetails.status=='Cancelled' || orderDetails.status=='Order Delivered'}">
+                            <button  class="btn  btn-sm btn-primary disabled">Update</button>
+                          </th:block>
+
+                          <th:block th:unless="${orderDetails.status=='Cancelled' || orderDetails.status=='Order Delivered'}">
+                            <button class="btn  btn-sm btn-primary">Update</button>
+                          </th:block>
+
+                        </div>
+                      </div>
+                    </form>
+
+                  </td>
+                </tr>
+              </th:block>
+
+              <th:block th:if="${errorMessage}">
+                <p class="fd-3 text-center text-danger">[[${errorMessage}]]</p>
+              </th:block>
+
+
+            </th:block>
+
+            <th:block th:unless="${search}">
+
+
+              <tr th:each="o:${orders}">
+                <th scope="row">[[${o.orderId}]]</th>
+                <td>
+                  Name: [[${o.OrderAddress.firstName+' '+o.OrderAddress.lastName}]] <br>
+                  Email: [[${o.OrderAddress.email}]]<br>
+                  Mobile No: [[${o.OrderAddress.mobileNo}]]<br>
+                  Address: [[${o.OrderAddress.address}]]<br>
+                  City: [[${o.OrderAddress.city}]]<br>
+                  State: [[${o.OrderAddress.state}]]<br>
+                  Pincode: [[${o.OrderAddress.pincode}]]<br>
+                </td>
+                <td>[[${o.orderDate}]]</td>
+                <td>[[${o.product.title}]]</td>
+                <td>[[${o.quantity}]]</td>
+                <td>[[${o.quantity * o.price}]] </td>
+                <td>[[${o.status}]]</td>
+                <td>
+                  <form action="/admin/update-order-status" method="post">
+                    <div class="row">
+                      <div class="col">
+                        <select class="form-control" name="st">
+                          <option>---Select---</option>
+                          <option value="1">In Progress</option>
+                          <option value="2">Order Received</option>
+                          <option value="3">Product Packed</option>
+                          <option value="4">Out for Delivery</option>
+                          <option value="5">Order Delivered</option>
+                          <option value="6">Cancelled</option>
+                        </select>
+                      </div>
+                      <input th:value="${o.id}" name="id" type="hidden">
+                      <div class="col">
+
+                        <th:block th:if="${o.status=='Cancelled' || o.status=='Order Delivered'}">
+                          <button  class="btn  btn-sm btn-primary disabled">Update</button>
+                        </th:block>
+
+                        <th:block th:unless="${o.status=='Cancelled' || o.status=='Order Delivered'}">
+                          <button class="btn  btn-sm btn-primary">Update</button>
+                        </th:block>
+
+                      </div>
                     </div>
-                    <input th:value="${o.id}" name="id" type="hidden">
-                    <div class="col">
-
-                      <th:block th:if="${o.status=='Cancelled' || o.status=='Order Delivered'}">
-                        <button  class="btn  btn-sm btn-primary disabled">Update</button>
-                      </th:block>
-
-                      <th:block th:unless="${o.status=='Cancelled' || o.status=='Order Delivered'}">
-                        <button class="btn  btn-sm btn-primary">Update</button>
-                      </th:block>
-
-                    </div>
-                  </div>
-                </form>
-
-              </td>
-            </tr>
+                  </form>
+                </td>
+              </tr>
+            </th:block>
           </tbody>
         </table>
-        <a href="/admin/" class="btn  btn-primary">
-          <i class="fa-regular fa-circle-left"></i> Back</a>
       </div>
     </div>
   </div>

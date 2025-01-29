@@ -15,6 +15,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -325,6 +326,8 @@ public class AdminController {
         List<ProductOrder> allOrders = orderService.getAllOrdersSortedByDate();
 
         m.addAttribute("orders",allOrders);
+        m.addAttribute("search",false);
+
 
         return "/admin/orders";
     }
@@ -358,6 +361,34 @@ public class AdminController {
     }
 
 
+
+//---------------------------------- Search ------------------------------------------
+
+
+    @GetMapping("/search-order")
+    public String searchProduct(@RequestParam String orderId, Model m, HttpSession session) {
+
+        if (orderId != null && orderId.length() > 0) {
+
+            ProductOrder order = orderService.getOrderByOrderId(orderId.trim());
+
+            if (order == null) {
+                m.addAttribute("errorMessage", "No order found with ID: " + orderId);
+                m.addAttribute("orderDetails", null);
+            } else {
+                m.addAttribute("orderDetails", order);
+            }
+
+            m.addAttribute("search", true);
+        }
+        else {
+            List<ProductOrder> allOrders = orderService.getAllOrdersSortedByDate();
+
+            m.addAttribute("orders",allOrders);
+            m.addAttribute("search",false);
+        }
+        return "/admin/orders";
+    }
 
 
 }

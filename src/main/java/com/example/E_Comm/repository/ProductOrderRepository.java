@@ -12,4 +12,6 @@ public interface ProductOrderRepository extends JpaRepository<ProductOrder,Integ
 
     @Query("SELECT o FROM ProductOrder o ORDER BY o.orderDate DESC")
     List<ProductOrder> findAllOrdersSortedByDate();
+
+    ProductOrder findByOrderId(String orderId);
 }
