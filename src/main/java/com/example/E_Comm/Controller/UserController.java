@@ -213,4 +213,30 @@ public class UserController {
     }
 
 
+// ---------------------Change Password-------------------------------------
+
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam String newPassword,@RequestParam String currentPassword, Principal p, HttpSession session){
+
+        UserDetails loggedInUserDetails = getLoggedInUserDetails(p);
+
+        boolean matches = passwordEncoder.matches(currentPassword, loggedInUserDetails.getPassword());
+        if (matches){
+            String encodePassword = passwordEncoder.encode(newPassword);
+            loggedInUserDetails.setPassword(encodePassword);
+            UserDetails updateUser = userService.updateUser(loggedInUserDetails);
+            if (ObjectUtils.isEmpty(updateUser)){
+                session.setAttribute("Error","Password not updated || Try Again!!!");
+            }
+            else {
+                session.setAttribute("Success","Password updated successfully");
+            }
+        }else {
+            session.setAttribute("Error","Current Password is Incorrect");
+        }
+
+        return "redirect:/user/profile";
+    }
+
+
 }
