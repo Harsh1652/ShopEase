@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -92,14 +93,38 @@ public class HomeController {
     }
 
     @GetMapping("/products")
-    public String product(Model m, @RequestParam(value = "category", defaultValue = "") String categoryName) {
-        List<Category> categories = categoryService.getAllCategory();
-        List<Product> products = productService.getAllActiveProduct(categoryName);
-        m.addAttribute("categories", categories);
+    public String product(Model m, @RequestParam(value = "category", defaultValue = "") String categoryName,
+                          @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+                          @RequestParam(name = "pageSize", defaultValue = "9") Integer pageSize) {
+
+        // Fetch categories and add to the model
+        List<Category> categories = categoryService.getAllActiveCategory();
+        m.addAttribute("categories", categories);  // Add categories to the model
+
+        // Fetch products with pagination
+        Page<Product> page = productService.getAllActiveProductPagination(pageNo, pageSize, categoryName);
+        List<Product> products = page.getContent();
+
+//        // Debug log to verify data
+//        System.out.println("Categories found: " + categories.size());
+//        System.out.println("Products found: " + products.size());
+
+        // Add pagination and product details to the model
         m.addAttribute("products", products);
-        m.addAttribute("paramValue",categoryName);
+        m.addAttribute("pageNo", page.getNumber());
+        m.addAttribute("pageSize", pageSize);
+        m.addAttribute("totalElements", page.getTotalElements());
+        m.addAttribute("totalPages", page.getTotalPages());
+        m.addAttribute("isFirst", page.isFirst());
+        m.addAttribute("isLast", page.isLast());
+
+        // Add current category filter for active class
+        m.addAttribute("paramValue", categoryName);
+
         return "product";
     }
+
+
 
 
     @GetMapping("/viewProducts/{id}")

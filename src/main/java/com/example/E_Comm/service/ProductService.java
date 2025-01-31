@@ -3,8 +3,10 @@ package com.example.E_Comm.service;
 
 import com.example.E_Comm.model.Product;
 import com.example.E_Comm.model.ProductOrder;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.PublicKey;
 import java.util.List;
 
 public interface ProductService {
@@ -23,4 +25,5 @@ public interface ProductService {
 
     public List<Product> searchProduct(String ch);
 
+    public Page<Product> getAllActiveProductPagination(Integer pageNo, Integer pageSize, String category);
 }

@@ -8,6 +8,9 @@ import com.example.E_Comm.service.CategoryService;
 import com.example.E_Comm.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -122,6 +125,31 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> searchProduct(String ch) {
         return productRepository.searchProduct(ch);
     }
+
+
+
+    @Override
+    public Page<Product> getAllActiveProductPagination(Integer pageNo, Integer pageSize, String categoryName) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        if (ObjectUtils.isEmpty(categoryName)) {
+            Page<Product> products = productRepository.findByIsActiveTrue(pageable);
+            System.out.println("Products retrieved: " + products.getContent().size());
+            return products;
+        } else {
+            Category category = categoryService.getCategoryByName(categoryName);
+            if (category != null) {
+                Page<Product> products = productRepository.findByCategory(category, pageable);
+                System.out.println("Products retrieved for category '" + categoryName + "': " + products.getContent().size());
+                return products;
+            } else {
+                System.out.println("No category found for name: " + categoryName);
+                return Page.empty();
+            }
+        }
+    }
+
+
 
 
 }
