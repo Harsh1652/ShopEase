@@ -10,14 +10,17 @@
     <SECTION>
         <div class="container-fluid mt-5 p-5">
 
+            <p class="fs-4 text-center">View Products</p>
+            <hr>
             <div class="col-md-5 p-4">
-                <form>
+                <form action="/admin/viewProducts" method="get">
                     <a href="/admin/" class="btn  btn-primary">
                         <i class="fa-regular fa-circle-let"></i> Back</a>
                     <br>
+                    <br>
                     <div class="row">
                         <div class="col">
-                            <input type="text" class="form-control" name="" placeholder="Enter Product Name">
+                            <input type="text" class="form-control" name="ch" placeholder="Enter Product Name">
                         </div>
                         <div class="col">
                             <button class="btn btn-primary">Search</button>
@@ -29,7 +32,7 @@
 
             <div class="card card-sh">
                 <div class="card-header text-center">
-                    <p class="fs-4">View Products</p>
+<!--                    <p class="fs-4">View Products</p>-->
                     <th:block th:if="${session.Success}">
                         <p class="text-success fw-bold">[[${session.Success}]]</p>
                         <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
@@ -41,8 +44,8 @@
                     </th:block>
                 </div>
                 <div class="card-body">
-                    <table class="table">
-                        <thead>
+                    <table class="table table-bordered">
+                        <thead class="table-light">
                         <tr>
                             <th scope="col">Sr No</th>
                             <th scope="col">Image</th>

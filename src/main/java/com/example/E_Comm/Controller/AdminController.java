@@ -219,9 +219,17 @@ public class AdminController {
 //-----------------------VIEW PRODUCTS-----------------------------------------
 
     @GetMapping("/viewProducts")
-    public String loadViewProduct(Model m){
+    public String loadViewProduct(Model m, @RequestParam(defaultValue = "") String ch){
 
-        List<Product> products = productService.getAllProduct();
+        List<Product> products = null;
+        if (ch!=null && ch.length() > 0){
+            products = productService.searchProduct(ch);
+        }else {
+            products = productService.getAllProduct();
+        }
+
+
+        //List<Product> products = productService.getAllProduct();
         products.forEach(product -> System.out.println("Product: " + product));
         m.addAttribute("products", products);
         return "/admin/Products_View";
@@ -366,7 +374,7 @@ public class AdminController {
 
 
     @GetMapping("/search-order")
-    public String searchProduct(@RequestParam String orderId, Model m, HttpSession session) {
+    public String searchOrder(@RequestParam String orderId, Model m, HttpSession session) {
 
         if (orderId != null && orderId.length() > 0) {
 
@@ -389,6 +397,8 @@ public class AdminController {
         }
         return "/admin/orders";
     }
+
+
 
 
 }
