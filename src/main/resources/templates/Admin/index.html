@@ -1,3 +1,4 @@
+<!--index.html-->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeLeaf.org"
       th:replace="base::Layout(~{::SECTION})">
@@ -56,7 +57,7 @@
                 </div>
 
                 <div class="col-md-4 mt-4">
-                    <a href="/admin/users" class="text-decoration-none">
+                    <a href="/admin/users?type=1" class="text-decoration-none">
                         <div class="card card-sh">
                             <div class="card-body text-center text-primary">
                                 <i class="fa-regular fa-user fa-3x"></i>
@@ -67,10 +68,22 @@
                 </div>
 
                 <div class="col-md-4 mt-4">
-                    <a href="#" class="text-decoration-none">
+                    <a href="/admin/add-admin" class="text-decoration-none">
                         <div class="card card-sh">
                             <div class="card-body text-center text-primary">
-                                <i class="fa-solid fa-user-plus fa-3x"></i>                                <h4>Add Admin</h4>
+                                <i class="fa-solid fa-user-plus fa-3x"></i>
+                                <h4>Add Admin</h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-4 mt-4">
+                    <a href="/admin/users?type=2" class="text-decoration-none">
+                        <div class="card card-sh">
+                            <div class="card-body text-center text-primary">
+                                <i class="fa-regular fa-user fa-3x"></i>
+                                <h4>Admins</h4>
                             </div>
                         </div>
                     </a>

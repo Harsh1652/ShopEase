@@ -46,6 +46,20 @@ public class UserServiceImpl implements UserService {
         return saveUser;
     }
 
+
+    @Override
+    public UserDetails saveAdmin(UserDetails user) {
+        user.setRole("ADMIN");
+        user.setIsEnabled(true);
+        user.setAccountNonLocked(true);
+        user.setFailedAttempt(0);
+
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        UserDetails saveUser = userRepository.save(user);
+        return saveUser;
+    }
+
     @Override
     public UserDetails getUserByEmail(String email) {
         return userRepository.findByEmail(email);

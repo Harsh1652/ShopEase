@@ -3,6 +3,8 @@ package com.example.E_Comm.Util;
 
 import com.example.E_Comm.model.Category;
 import com.example.E_Comm.model.ProductOrder;
+import com.example.E_Comm.model.UserDetails;
+import com.example.E_Comm.service.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,12 +14,16 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
+import java.security.Principal;
 
 @Component
 public class CommonUtil {
 
     @Autowired
     private  JavaMailSender mailSender;
+
+    @Autowired
+    public UserService userService;
 
     public Boolean sendMail(String url, String reciepentEmail) throws MessagingException, UnsupportedEncodingException {
 
@@ -77,6 +83,16 @@ public class CommonUtil {
         helper.setText(msg, true);
         mailSender.send(message);
         return true;
+    }
+
+
+
+    public UserDetails getLoggedInUserDetails(Principal p) {
+        if (userService == null) {
+            throw new RuntimeException("UserService is not injected!");
+        }
+        String email = p.getName();
+        return userService.getUserByEmail(email);
     }
 
 
