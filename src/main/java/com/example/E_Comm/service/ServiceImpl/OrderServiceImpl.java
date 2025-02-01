@@ -11,6 +11,10 @@ import com.example.E_Comm.repository.CartRepository;
 import com.example.E_Comm.repository.ProductOrderRepository;
 import com.example.E_Comm.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -105,6 +109,13 @@ public class OrderServiceImpl implements OrderService {
 
         return orderRepository.findByOrderId(orderId);
     }
+
+    @Override
+    public Page<ProductOrder> getAllOrdersSortedByDatePagination(Integer pageNo, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);  // Correct method call
+        return orderRepository.findAll(pageable);
+    }
+
 
 
 }

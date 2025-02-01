@@ -83,13 +83,46 @@
                         </tr>
                         </tbody>
                     </table>
+
+                    <!-- Product Count and Pagination Section -->
+                    <div class="row">
+                        <div class="col-md-4">Total Products: [[${totalElements}]]</div>
+                        <div class="col-md-6">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+
+                                    <!-- Previous Link -->
+                                    <li class="page-item" th:classappend="${isFirst} ? 'disabled'">
+                                        <a class="page-link" th:href="@{'/admin/viewProducts?pageNo=' + ${pageNo - 1} + '&category=' + ${paramValue}}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+
+                                    <!-- Page Links -->
+                                    <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                        th:classappend="${i == pageNo} ? 'active' : ''"
+                                        class="page-item">
+                                        <a class="page-link"
+                                           th:href="@{'/admin/viewProducts?pageNo=' + ${i} + '&category=' + ${paramValue}}">[[${i + 1}]]</a>
+                                    </li>
+
+                                    <!-- Next Link -->
+                                    <li class="page-item" th:classappend="${isLast} ? 'disabled'">
+                                        <a class="page-link" th:href="@{'/admin/viewProducts?pageNo=' + ${pageNo + 1} + '&category=' + ${paramValue}}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-
 <!--            <div class="mt-3">-->
 <!--                <a href="/admin/" class="btn btn-primary col-md-2">Back</a>-->
 <!--            </div>-->
-
         </div>
     </SECTION>
 </body>

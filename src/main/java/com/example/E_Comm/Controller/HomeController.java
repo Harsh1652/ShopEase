@@ -105,10 +105,6 @@ public class HomeController {
         Page<Product> page = productService.getAllActiveProductPagination(pageNo, pageSize, categoryName);
         List<Product> products = page.getContent();
 
-//        // Debug log to verify data
-//        System.out.println("Categories found: " + categories.size());
-//        System.out.println("Products found: " + products.size());
-
         // Add pagination and product details to the model
         m.addAttribute("products", products);
         m.addAttribute("pageNo", page.getNumber());
