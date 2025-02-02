@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -162,6 +163,18 @@ public class ProductServiceImpl implements ProductService {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         return productRepository.findAll(pageable);
     }
+
+    public Page<Product> searchActiveProductPagination(Integer pageNo, Integer pageSize, String categoryName, String ch) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        if (StringUtils.isEmpty(categoryName)) {
+            return productRepository.searchProduct(ch, pageable);
+        } else {
+            return productRepository.searchProductByCategory(categoryName, ch, pageable);
+        }
+    }
+
+
 
 
 }

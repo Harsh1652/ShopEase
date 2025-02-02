@@ -22,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +36,7 @@ import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -73,10 +75,19 @@ public class HomeController {
 
         List<Category> allActiveCategory = categoryService.getAllActiveCategory();
         m.addAttribute("category", allActiveCategory);
+
     }
 
     @GetMapping("/")
-    public String index(){
+    public String index(Model m){
+
+        List<Category> allActiveCategory = categoryService.getAllActiveCategory().stream().limit(6).toList();
+        List<Product> allActiveProducts = productService.getAllActiveProduct("").stream().limit(8).toList();
+
+        m.addAttribute("category",allActiveCategory);
+        m.addAttribute("products", allActiveProducts);
+
+
         return "index";
     }
 
@@ -93,33 +104,34 @@ public class HomeController {
     }
 
     @GetMapping("/products")
-    public String product(Model m, @RequestParam(value = "category", defaultValue = "") String categoryName,
+    public String product(Model m,
+                          @RequestParam(value = "category", defaultValue = "") String categoryName,
                           @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
-                          @RequestParam(name = "pageSize", defaultValue = "2") Integer pageSize) {
+                          @RequestParam(name = "pageSize", defaultValue = "2") Integer pageSize,
+                          @RequestParam(name = "ch", required = false) String ch) {
 
-        // Fetch categories and add to the model
         List<Category> categories = categoryService.getAllActiveCategory();
-        m.addAttribute("categories", categories);  // Add categories to the model
+        m.addAttribute("categories", categories);
 
-        // Fetch products with pagination
-        Page<Product> page = productService.getAllActiveProductPagination(pageNo, pageSize, categoryName);
-        List<Product> products = page.getContent();
+        Page<Product> page;
 
-        // Add pagination and product details to the model
-        m.addAttribute("products", products);
+        if (StringUtils.hasText(ch)) {
+            page = productService.searchActiveProductPagination(pageNo, pageSize, categoryName, ch);
+        } else {
+            page = productService.getAllActiveProductPagination(pageNo, pageSize, categoryName);
+        }
+
+        m.addAttribute("products", page.getContent());
         m.addAttribute("pageNo", page.getNumber());
         m.addAttribute("pageSize", pageSize);
         m.addAttribute("totalElements", page.getTotalElements());
         m.addAttribute("totalPages", page.getTotalPages());
         m.addAttribute("isFirst", page.isFirst());
         m.addAttribute("isLast", page.isLast());
-
-        // Add current category filter for active class
         m.addAttribute("paramValue", categoryName);
 
         return "product";
     }
-
 
 
 

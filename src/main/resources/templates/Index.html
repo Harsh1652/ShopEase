@@ -38,62 +38,18 @@
         <div class="container">
             <div class="row">
                 <p class="text-center fs-4">Category</p>
-                <div class="col-md-2">
-                    <div class="card rounded-circle shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-                        <div class="card-body text-center">
-                            <img src="img/Category/appli.png" width="70%" height="130px">
-                            <p>Electronics</p>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-md-2">
+                <div class="col-md-2" th:each="c:${category}">
                     <div class="card rounded-circle shadow-sm p-3 mb-5 bg-body-tertiary rounded">
                         <div class="card-body text-center">
-                            <img src="img/Category/beuty.png" width="70%" height="130px">
-                            <p>Beauty</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="card rounded-circle shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-                        <div class="card-body text-center">
-                            <img src="img/Category/book.jpg" width="70%" height="130px">
-                            <p>Books</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="card rounded-circle shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-                        <div class="card-body text-center">
-                            <img src="img/Category/groccery.jpg" width="70%" height="130px">
-                            <p>Grocery</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="card rounded-circle shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-                        <div class="card-body text-center">
-                            <img src="img/Category/mobile.png" width="70%" height="130px">
-                            <p>Mobile</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="card rounded-circle shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-                        <div class="card-body text-center">
-                            <img src="img/Category/laptop.jpg" width="70%" height="130px">
-                            <p>laptop</p>
+                            <img th:src="@{'img/Category/'+${c.imageName}}" width="70%" height="130px">
+                            <p>[[${c.name}]]</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-<!--        Start Category Module  -->
+<!--        End Category Module  -->
 
 <!--        Productds Start   -->
 
@@ -101,54 +57,19 @@
             <div class="row">
                 <p class="text-center fs-4">Latest Products</p>
 
-                <div class="col-md-3">
+                <div class="col-md-3" th:each="p:${products}">
                     <div class="card shadow-sm p-3 mb-5 bg-body-tertiary rounded">
                         <div class="card-body text-center">
-                            <img src="img/Products/laptop.jpg"
+                            <img th:src="@{'img/Products/'+${p.image}}"
                                  width="70%" height="130px">
-                            <p class="text-center">HP Laptop</p>
+                            <p class="text-center">[[${p.title}]]</p>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-3">
-                    <div class="card shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-                        <div class="card-body text-center">
-                            <img src="img/Products/oneplus mobile.jpg"
-                                 width="70%" height="130px">
-                            <p class="text-center">OnePlus Mobile </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="card shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-                        <div class="card-body text-center">
-                            <img src="img/Products/monitor.jpg"
-                                 width="70%" height="130px">
-                            <p class="text-center">Desktop</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="card shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-                        <div class="card-body text-center">
-                            <img src="img/Products/iphone 14.jpg"
-                                 width="70%" height="130px">
-                            <p class="text-center">Iphone 14</p>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
+
 <!--        Products End    -->
-
-
-
-
     </SECTION>
-
 </body>
 </html>
