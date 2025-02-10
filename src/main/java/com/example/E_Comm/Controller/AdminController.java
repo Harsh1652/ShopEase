@@ -96,12 +96,21 @@ public class AdminController {
         // Log isActive for debugging
         System.out.println("isActive from form: " + category.isActive());
 
+        // Trim the category name to avoid issues with spaces
+        String trimmedName = category.getName().trim();
+        category.setName(trimmedName); // Update the category name in the object
+
+        // Log the trimmed category name
+        System.out.println("Trimmed category name: " + trimmedName);
+
         // Set default image name if no file is uploaded
         String imageName = (file != null && !file.isEmpty()) ? file.getOriginalFilename() : "default.jpg";
         category.setImageName(imageName);
 
         // Check if the category already exists
-        Boolean existsCategory = categoryService.existCategory(category.getName());
+        Boolean existsCategory = categoryService.existCategory(trimmedName);
+        System.out.println("Checking existence for category name: " + trimmedName);
+
         if (existsCategory) {
             session.setAttribute("Error", "Category Name already exists");
         } else {
@@ -110,10 +119,10 @@ public class AdminController {
             if (ObjectUtils.isEmpty(savedCategory)) {
                 session.setAttribute("Error", "Not Saved! Internal Server Error");
             } else {
-
+                // Handle file upload
                 File saveFile = new ClassPathResource("static/img").getFile();
-                Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "Category" + File.separator + file.getOriginalFilename());
-                System.out.println(path);
+                Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "Category" + File.separator + imageName);
+                System.out.println("Saving file to: " + path);
                 Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
                 session.setAttribute("Success", "Saved Successfully");
@@ -121,7 +130,6 @@ public class AdminController {
         }
         return "redirect:/admin/Category";
     }
-
 
     @GetMapping("/deleteCategory/{id}")
     public String deleteCategory(@PathVariable int id, HttpSession session){
@@ -241,7 +249,8 @@ public class AdminController {
 //-----------------------VIEW PRODUCTS-----------------------------------------
 
     @GetMapping("/viewProducts")
-    public String loadViewProduct(Model m, @RequestParam(defaultValue = "") String ch , @RequestParam(name = "pageNo", defaultValue = "0")Integer pageNo,
+    public String loadViewProduct(Model m, @RequestParam(defaultValue = "") String ch ,
+                                  @RequestParam(name = "pageNo", defaultValue = "0")Integer pageNo,
                                   @RequestParam(name = "pageSize",defaultValue = "3")Integer pageSize){
 
 
@@ -317,7 +326,7 @@ public class AdminController {
     }
 
 
-//--------------------------UserDetails---------------------------------
+    //--------------------------UserDetails---------------------------------
     @ModelAttribute
     public void getUserDetails(Principal p, Model m){
 
@@ -477,8 +486,8 @@ public class AdminController {
 
     @PostMapping("/save-admin")
     public String saveAdmin(UserDetails user,
-                           @RequestParam("file") MultipartFile file,
-                           HttpSession session) throws IOException {
+                            @RequestParam("file") MultipartFile file,
+                            HttpSession session) throws IOException {
         if (!file.isEmpty()) {
             // Save the uploaded file to the server
             File saveFile = new ClassPathResource("static/img").getFile();
@@ -553,5 +562,4 @@ public class AdminController {
 
 
 }
-
 

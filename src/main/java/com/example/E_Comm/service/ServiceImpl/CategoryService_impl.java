@@ -26,6 +26,8 @@ public class CategoryService_impl implements CategoryService {
 
     @Override
     public boolean existCategory(String name) {
+        // Log the name being checked
+        System.out.println("Checking existence for category name: " + name);
         return categoryRepository.existsByName(name);
     }
 
