@@ -20,21 +20,18 @@ The project is currently under active development. Most core features are implem
 ### Cart and Checkout
 - Add items to a shopping cart
 - View cart summary and update item quantities
-- Proceed to secure checkout
+- Proceed to checkout
 
 ### Order Management
 - Place orders after successful checkout
 - View order history and order details
 
-
 ### Role-Based Access Control (RBAC)
-- **USER Role:** Can browse products, add items to the cart, place orders, and make payments
+- **USER Role:** Can browse products, add items to the cart, place orders
 - **ADMIN Role:** Can manage products, categories, and orders
 
 ### Upcoming Feature
 - User dashboard for order tracking and personalized recommendations
-- Integration with payment gateway for secure transactions
-
 
 ## Project Structure
 The project follows a standard Spring Boot structure:
